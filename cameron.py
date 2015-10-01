@@ -1,58 +1,138 @@
 #!/usr/bin/env python
-import cv2, numpy, scipy
+import cv2, numpy, scipy, Image
 
+"""
+	Example:
+	from cameron import *
+	cats = imgLoad('cats.jpg')
+	selfie = imgTake()
+	dim = imgShape(cats)
+	catr,catg,catb = imgArr(cats)
+	imgr = rgbImg(catr)
+	imgShow(imgr,"Red Layer of cats.jpg",True) # True is 'wait'
 
-def imgLoad(filename): #loads images
+"""
+
+# loads images
+def imgLoad(filename):
 	img = cv2.imread(filename, cv2.CV_LOAD_IMAGE_COLOR)
 	return img
 
-def imgTake(): #takes images
+# takes images
+def imgTake():
 	camera = cv2.VideoCapture(0)
 	retval, img = camera.read()
 	return img
 
-def imgShape(img): #get array shape
+# get array shape
+def imgShape(img):
 	arr = numpy.asarray(img)
 	shape = arr.shape
-	return arr.shape
+	return shape
 
-def imgArr(img): #split as rgb arrays
+# split as rgb arrays
+def imgArr(img):
 	arr = numpy.asarray(img)
 	r = arr[:,:,0]
 	g = arr[:,:,1]
 	b = arr[:,:,2]
 	return r, g, b
 
-def rgbImg(arr): # grayscale image from array
+# grayscale image from array
+def rgbImg(arr):
 	z = numpy.zeros_like(arr)
 	img = cv2.merge([z,z,arr])
 	return img
 
-def imgShow(img,name): # image, named window
+# image, named window
+def imgShow(img,name,wait=False):
 	cv2.imshow(name,img)
+	if wait == True:
+		cv2.waitKey(0)
 
-def imgCrop(img,(sx,sy,lx,ly)): # tuple containing dimensions
+# tuple containing dimensions
+def imgCrop(img,(sx,sy,lx,ly)):
 	result[]; rx = -sx; ry = -sy; #offsets
 	for y in range(sy,ly):
 		for x in range(sx,lx):
 			result[ry+y,rx+x] = img[y,x]
 	return result
 
-
+# scaling using interpolation libraries
 def imgScale(img,scale):
-
-def scale1(im,scale):
-    im = cv2.cv.fromarray(im)
     width,length,depth = im.shape
-    for a in range(depth):
-        for b in range(length):
-            for c in range(width):
-    size = cv2.cv.GetSize(im)
-    thumbnail = cv2.cv.CreateImage( ( size[0] * scale, size[1] * scale))
-    cv2.cv.Resize(im, thumbnail)
-    #im = scipy.misc.imresize(im,scale)
-    return(thumbnail)
-z = numpy.zeros_like(im)
-cv2.namedWindow('Display Window')
-cv2.waitKey(0)
-#print("Printing value at 100, 100{}".format(im[100,100]))
+	width = width * scale
+	height = height * scale
+	img.resize((width,height),Image.NEAREST)#BILINEAR|BICUBIC|ANTIALIAS
+	return img
+
+# mask out things based on color
+def maskColor(img,color,tolerance=5,wantColor=True):
+	length, width = imgShape(img)
+	result = numpy.zeros_like(img)
+
+	for x in range(length):
+		for y in range(width):
+			if (abs(img[x,y] - color) < tolerance):
+				#if the color is within range
+				if wantColor:
+					result[x,y] = img[x,y]
+				else: #otherwise, return white
+					result[x,y] = (255,255,255)
+	return result
+
+def maskImage(img,mask,tolerance=5,wantColor=True):
+	length, width = imgShape(img)
+	mlength, mwidth = imgShape(mask)
+	# we can't use the edges around the image
+	sl = round(mlength / 2); sw = round(mwidth / 2);
+	ml = mlength - sl; mw = mwidth - sw;
+	for l in range(sl,ml):
+		for w in range(sw,mw):
+			# the edges are now eliminated
+			for (il=0;il<mlength;il++):
+				for (iw=0;iw<mwidth;iw++):
+				# compare each part of the mask
+
+def imgDelta(img,axis,layer,overlay=False):
+	length, width = imgShape(img)
+	for l in range(1,length-1):
+		for w in range(1,width-1):
+		pixel = img[l,w][layer]
+		# exclude one pixel around the image
+		result = []
+		for (a=-1,a<2,a++):
+			for (b=-1,b<2,b++):
+				result[a,b] = pixel - img[l+a,w+b][layer]
+		# average the results into the red channel
+		for (a=-1,a<2,a++):
+			for (b=-1,b<2,b++):
+				result[a,b] = pixel - img[l+a,w+b][layer]
+		# average the results into the green channel
+		# put back into image or overlay score?
+def img
+# pull
+
+
+if __name__ == "__main__":
+	cv2.namedWindow("blank")
+	#print("Printing value at 100, 100{}".format(im[100,100]))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
