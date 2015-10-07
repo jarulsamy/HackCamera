@@ -17,10 +17,14 @@ blue = third[:,:,2]
 #a,b,c = cv2.split(im)
 def scale1(im,scale):
     im = cv2.cv.fromarray(im)
-    width,length,depth = im.shape
-    for a in range(depth):
-        for b in range(length):
-            for c in range(width):
+    width,length,depth = im.shape 
+    image = 
+    for b in range(length):
+        for c in range(width):
+            if c%2 is 0:
+                if b%2 is 0:
+                    
+                
     size = cv2.cv.GetSize(im)
     thumbnail = cv2.cv.CreateImage( ( size[0] * scale, size[1] * scale))
     cv2.cv.Resize(im, thumbnail)
