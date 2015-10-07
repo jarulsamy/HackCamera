@@ -47,7 +47,7 @@ def rgbImg(arr):
 
 # image, named window
 def imgShow(img,name,wait=False):
-    cv2.imshow(name,img)
+    cv2.imshow(name, img)
     if wait == True:
         cv2.waitKey(0)
 
