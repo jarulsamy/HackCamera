@@ -69,16 +69,16 @@ def imgScale(img,scale):
     return img
 
 # mask out things based on color
-def maskColor(img,color,tolerance=5,wantColor=True):
-    length, width = imgShape(img)
+def maskColor(img,channel,value,tolerance=5,wantColor=True):
+    length, width, channels = imgShape(img)
     result = numpy.zeros_like(img)
 
     for x in range(length):
         for y in range(width):
-            if (abs(img[x,y] - color) < tolerance):
+            if (abs(img[x,y][channel] - value) < tolerance):
                 #if the color is within range
                 if wantColor:
-                    result[x,y] = img[x,y]
+                    result[x,y] = img[x,y][channel]
                 else: #otherwise, return white
                     result[x,y] = (255,255,255)
     return result
