@@ -25,11 +25,15 @@ def imgTake():
     retval, img = camera.read()
     return img
 
-# get array shape
-def imgShape(img):
-    arr = numpy.asarray(img)
-    shape = arr.shape
-    return shape
+# get channel number
+def channels(img):
+    tup = numpy.asarray(img).shape
+    chanNum = tup[2]
+    return chanNum
+
+def bounds(img):
+	x,y,z = numpy.asarray(img).shape
+	return x, y
 
 # split as rgb arrays
 def imgArr(img):
@@ -45,8 +49,9 @@ def rgbImg(arr):
     img = cv2.merge([z,z,arr])
     return img
 
+
 # image, named window
-def imgShow(img,name="unitato",wait=False):
+def imgShow(img,name="unitato",wait=True):
     cv2.imshow(name, img)
     if wait == True:
         cv2.waitKey(0)
@@ -62,30 +67,61 @@ def imgCrop(img,(sx,sy,lx,ly)):
 
 # scaling using interpolation libraries
 def imgScale(img,scale):
-    width,length,depth = im.shape
+    width,length,depth = img.shape
     width = width * scale
     height = height * scale
     img.resize((width,height),Image.NEAREST)#BILINEAR|BICUBIC|ANTIALIAS
     return img
 
+# print available colors
+def rgbAvail(arr):
+	result = []
+	length, width = bounds(arr)
+	for x in range(length):
+		for y in range(width):
+			result.extend(arr[x,y])
+	result = set(result)
+	return result
+
 # mask out things based on color
-def maskColor(img,channel,value,tolerance=5,wantColor=True):
-    length, width, channels = imgShape(img)
+def maskGrey(img, channel, value, tolerance=5, resultColor=255):
+    length, width = bounds(img)
+    ch = channels(img)
     result = numpy.zeros_like(img)
 
     for x in range(length):
         for y in range(width):
             if (abs(img[x,y][channel] - value) < tolerance):
                 #if the color is within range
-                if wantColor:
-                    result[x,y] = img[x,y][channel]
-                else: #otherwise, return white
-                    result[x,y] = (255,255,255)
+                result[x,y] = resultColor
+    return result
+def maskColor(img,mask,channel):
+    length, width = bounds(img)
+    ch = channels(img)
+    result = numpy.zeros_like(img)
+    for x in range(length):
+        for y in range(width):
+            if mask[x,y][channel] == 255:
+                result[x,y][channel] = img[x,y][channel]
     return result
 
+def posturize(img):
+	results = []
+	length, width = bounds(img)
+	channel = channels(img)
+	post = rgbAvail(img)
+	for ch in range(channel):
+		print ch
+		for color in post:
+			print color
+			mask = maskGrey(img,ch,color,20,255)
+			mask = maskColor(image, mask,1)
+			results.append(mask)
+	return results
+
 def maskImage(img,mask,tolerance=5,wantColor=True):
-    length, width = imgShape(img)
-    mlength, mwidth = imgShape(mask)
+    length, width = bounds(img)
+    mlength, mwidth = bounds(mask)
     # we can't use the edges around the image
     sl = round(mlength / 2); sw = round(mwidth / 2);
     ml = mlength - sl; mw = mwidth - sw;
@@ -118,7 +154,10 @@ def imgDelta(img,axis,layer,overlay=False):
 
 
 if __name__ == "__main__":
-    cv2.namedWindow("blank")
+	image = imgLoad("colors.png")
+	colors = posturize(image)
+	for color in colors:
+		imgShow(color)
     #print("Printing value at 100, 100{}".format(im[100,100]))
 
 
