@@ -46,7 +46,7 @@ def rgbImg(arr):
     return img
 
 # image, named window
-def imgShow(img,name,wait=False):
+def imgShow(img,name="unitato",wait=False):
     cv2.imshow(name, img)
     if wait == True:
         cv2.waitKey(0)
