@@ -7,9 +7,9 @@ Getting a security camera to see like we do is
 a tough problem, but we'll definitely give it a go!
 
 ### Goals?:
-* goal one?
-* goal two?
-* goal three?
+* Finish developing functions for joshua.py
+* Fix camera connection issues
+* Attempt to intergrate camera with scribbler robot
 
 
 ### Steps:
