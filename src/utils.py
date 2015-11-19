@@ -6,84 +6,63 @@ from PIL import Image
 
 # I/O
 def load(filename):
-	img = cv2.imread(filename, cv2.CV_LOAD_IMAGE_COLOR)
+	img = Image.open(filename)
+	result = img.getdata()
+	print img.format
+	print img.size
+	print img.mode
 	return img
 def take():
 	camera = cv2.VideoCapture(0)
 	retval, img = camera.read()
 	return img
-def show(img,name="unitato",wait=True):
-	cv2.imshow(name, img)
-	if wait == True:
-		cv2.waitKey(0)
+def show(img):
+	img.show()
 
 # conversions
 def bgr(img):
-	arr = numpy.asarray(img)
-	r = arr[:,:,0]
-	g = arr[:,:,1]
-	b = arr[:,:,2]
+	r, g, b, a = img.split()
 	return b, g, r
-def img(arr):
-	z = numpy.zeros_like(arr)
-	img = cv2.merge([z,z,arr])
+def image(b,g,r):
+	img = Image.merge("RGB", (b, g, r))
 	return img
 def like(img):
 	return numpy.zeros_like(img)
 
 # metadata
-def dim(RGB):
-	x = numpy.asarray(RGB).shape
-	return x
 def bounds(RGB):
-	x,y,z = dim(RGB)
-	return x, y
+	return RGB.size
 def channels(RGB):
-	chanNum = dim(RGB)
-	return chanNum[2]
-
+	mode = 3
+	if RGB.mode == 'L':
+		mode = 4
+	return mode
 # transforms
-def crop(given,coord):
-	
-	height = maxY - minY
-	width = maxX - minX
-	blank = numpy.zeros_like((height/2,width/2,3), np.uint8)
-	for x in range(minX,maxX):
-		for y in range(minY,maxY):
-			blank[x-width][y-height] = given[x][y]
-	return blank
+def crop(img,coord):
+	img.crop(coord)
+	return img
+
 def scale(img,scale):
-	width,length,depth = img.shape
-	width = width * scale
-	height = height * scale
-	img.resize((width,height),Image.NEAREST)#BILINEAR|BICUBIC|ANTIALIAS
+	width,length = bounds(img)
+	width = int(width * scale)
+	length = int(length * scale)
+	img.resize((width,length),Image.NEAREST)#BILINEAR|BICUBIC|ANTIALIAS
 	return img
 
 # colors
 def color(img, x , y):
-	dim = dim(img)
-	arr = numpy.asarray(img)
-	r = arr[y , x, 0]
-	g = arr[y , x, 1]
-	b = arr[y , x, 2]
-	return r , g , b
-def avail(arr):
-	result = []
-	length, width = bounds(arr)
-	for x in range(length):
-		for y in range(width):
-			result.extend(arr[x,y])
-	result = set(result)
-	return result
+	img = img.load()
+	return img[x,y]
+def avail(img):
+	return img.getcolors()
+
 def colorPicker(given,x,y):
-	minX=x-25
-	maxX=x+25
-	minY=y-25
-	minX=y+25
-	blank = crop(given,minX,minY,maxX,maxY)
-	show(blank,"Hello",True)
-	print given[x][y]
-	return given[x][y]
+	box = (x-25,x+25,y-25,y+25)
+	blank = crop(given,box)
+	show(blank)
+	given = given.load()
+	print given[x,y]
+	return given[x,y]
 
 
 """

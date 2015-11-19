@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-from utils import (load, take, show, bgr, img, like, dim,
-bounds, channels, crop, scale, color, avail, colorPicker)
+from utils import (load, take, show, bgr, image, like, bounds,
+channels, crop, scale, color, avail, colorPicker)
 #http://homepages.inf.ed.ac.uk/rbf/HIPR2/log.htm
 #https://en.wikipedia.org/wiki/Unsharp_masking
 
