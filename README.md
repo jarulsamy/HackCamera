@@ -23,3 +23,10 @@ Hacking a kaicong security camera
 1. processing
 2. blobbing
 3. metadata
+
+## Status
+
+* Utilities are now in the Image library.
+* .load() is limiting.
+* Current mock processes are slow.
+* Current mocks comb multiple times.

@@ -3,144 +3,90 @@ from utils import (load, take, show, bgr, image, like, bounds,
 channels, crop, scale, color, avail, colorPicker)
 #http://homepages.inf.ed.ac.uk/rbf/HIPR2/log.htm
 #https://en.wikipedia.org/wiki/Unsharp_masking
+#http://www.effbot.org/imagingbook/image.htm
+#http://pythonvision.org/basic-tutorial/
+import cv2
+import numpy as np
+from PIL import Image
 
 # processing
-def alias(img,amount):
-	results = []
+def alias(img,amount): #cheating with a mask
 	length, width = bounds(img)
 	channel = channels(img)
 	post = avail(img)
-	for ch in range(channel):
-		print ch
-		for color in post:
-			print color
-			mask = maskGrey(img,ch,color,20,255)
-			mask = maskColor(image, mask,1)
-			results.append(mask)
-	return results
-def sharpen(img,amount):#axis,layer,overlay=False
-	length, width = shape(img)
-	for l in range(1,length-1):
-		for w in range(1,width-1):
-			pixel = img[l,w][layer]
-		# exclude one pixel around the image
-		result = []
-		for a in range(-1,1):
-			for b in range(-1,1):
-				result[a,b] = pixel - img[l+a,w+b][layer]
-		# average the results into the red channel
-		for a in range(-1,1):
-			for b in range(-1,1):
-				result[a,b] = pixel - img[l+a,w+b][layer]
-
-	image = load("colors.png")
-	colors = posturize(image)
-	for color in colors:
-		show(color)
-	#print("Printing value at 100, 100{}".format(im[100,100]))
+	mask = [[0,0,0],[255,255,255],[0,0,0],
+			[255,255,255],[255,255,255],[255,255,255],
+			[0,0,0],[255,255,255],[0,0,0]]
+	result = find(img,mask,(3,3))
+	return result
+def sharpen(img,amount): #not actually sharpening
+	result = like(img)
+	length, width = bounds(img)
+	img = img.load()
+	result = result.load()
+	for left in range(1,length-1):
+		for top in range(1,width-1):
+			pixel = [0,0,0,0]
+			for l in range(-1,1):
+				for w in range(-1, 1):
+					pixel[0] += img[left+l,top+w][0]
+					pixel[1] += img[left+l,top+w][1]
+					pixel[2] += img[left+l,top+w][2]
+			result[left,top] = tuple(pixel)
+	return result
 
 # blobbing
-def group(img):#img,color,wantColor=True, channel, value, tolerance=5, resultColor=255,maskimg,color,tolerance=5,wantColor=True
-	length, width = shape(img)
-	result = numpy.zeros_like(img)
-	for x in range(length):
-		for y in range(width):
-			if (abs(img[x,y] - color) < tolerance):
-				#if the color is within range
-				if wantColor:
-					result[x,y] = img[x,y]
-				else: #otherwise, return white
-					result[x,y] = (255,255,255)
+def group(img):#automatically
+	length, width = bounds(img)
+	result = like(img).load()
+	img = img.load()
+	color = [255,255,255,255]
+	tolerance = [2,2,2,2]
+	for inc in range(1,127): # this is really really slow / iterative
+		for x in range(length):
+			for y in range(width):
+				matches = 0
+				if (abs(img[x,y][0] - color[0]) < tolerance):
+					matches += 1
+				if (abs(img[x,y][1] - color[1]) < tolerance):
+					matches += 1
+				if (abs(img[x,y][2] - color[2]) < tolerance):
+					matches += 1
+				if matches > 3:
+					result[x,y] = tuple(color)
 	return result
-	length, width = shape(img)
-	result = numpy.zeros_like(img)
-	for x in range(length):
-		for y in range(width):
-			if (abs(img[x,y] - color) < tolerance):
-				#if the color is within range
-				if wantColor:
-					result[x,y] = img[x,y]
-				else: #otherwise, return white
-					result[x,y] = (255,255,255)
+def find(img,mask,dims): # this isn't actually blobbing anything
 	length, width = bounds(img)
-	ch = channels(img)
-	result = numpy.zeros_like(img)
-	length, width = bounds(img)
-	mlength, mwidth = bounds(mask)
-	# we can't use the edges around the image
-	sl = round(mlength / 2); sw = round(mwidth / 2);
-	ml = mlength - sl; mw = mwidth - sw;
-	for l in range(sl,ml):
-		for w in range(sw,mw):
-			# the edges are now eliminated
-			for il in range(-1,1):
-				for iw in range(-1,1):
-					print "hello"
-				# compare each part of the mask
-	for x in range(length):
-		for y in range(width):
-			if (abs(img[x,y][channel] - value) < tolerance):
-				#if the color is within range
-				result[x,y] = resultColor
-	length, width = bounds(img)
-	ch = channels(img)
-	result = numpy.zeros_like(img)
-	for x in range(length):
-		for y in range(width):
-			if mask[x,y][channel] == 255:
-				result[x,y][channel] = img[x,y][channel]
+	height, breadth = dims
+	result = like(img)
+	img = img.load()
+	height = int(height / 2)
+	breadth = int(breadth / 2)
+	for l in range(height,length-height):
+		for w in range(breadth,width-breadth):
+			pixel = img[l,w]
 	return result
-def find(img,mask):
-	length, width = shape(img)
-	for l in range(1,length-1):
-		for w in range(1,width-1):
-			pixel = img[l,w][layer]
-		# exclude one pixel around the image
-		result = []
-		for a in range(-1,1):
-			for b in range(-1,1):
-				result[a,b] = pixel - img[l+a,w+b][layer]
-		# average the results into the red channel
-		for a in range(-1,1):
-			for b in range(-1,1):
-				result[a,b] = pixel - img[l+a,w+b][layer]
-
-	image = load("colors.png")
-	colors = posturize(image)
-	for color in colors:
-		show(color)
-	#print("Printing value at 100, 100{}".format(im[100,100]))
 
 # metadata
-def edge(img):#img,axis,layer,overlay=False
-	avails = set(list(np.flatten(image)))
-	newImage = blank(hyper(image))
+def edge(img):
+	avails = avail(img)
+	result = like(img).load()
+	length,width = bounds(img)
+	img = img.load()
 	for a in range(0,len(avails)):
-		avail = avails[a]
-		for x in range(0,maxX):
-			for y in range(0,maxY):
-				if avail == image[x][y]:
-					newImage[a][x][y] == (255,255,255)
-	#(x,y) (Xmin_max/2 Ymin_max/2) middle
-	for img in newImg:
-		show(img)
-		result = 2
-	point = area(x,y)# rgb
-	for x,y in area:
-		print "hi"
-		#grab everything similar to that point
+		av = avails[a]
+		for x in range(0,length):
+			for y in range(0,width):
+				if av == img[x,y]:
+					result[x,y] == av
+	return result
 def center(blob):
-	# Read image
-	im = cv2.imread("blob.jpg", cv2.IMREAD_GRAYSCALE)
-	# Set up the detector with default parameters.
+	im = cv2.imread("samples/abstract/colors.png", cv2.IMREAD_GRAYSCALE)
 	detector = cv2.SimpleBlobDetector()
-	# Detect blobs.
 	keypoints = detector.detect(im)
-	# Draw detected blobs as red circles.
-	# cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS ensures the size of the circle corresponds to the size of blob
 	im_with_keypoints = cv2.drawKeypoints(im, keypoints, np.array([]), (0,0,255), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-	 	# Show keypoints
 	cv2.imshow("Keypoints", im_with_keypoints)
 	cv2.waitKey(0)
-def distance(point):
-	print "hello"
+def distance(img,point):
+	result = (0,0,0) # 3d grid
+	return result

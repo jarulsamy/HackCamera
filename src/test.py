@@ -2,34 +2,32 @@
 from utils import (load, take, show, bgr, image, like, bounds,
 channels, crop, scale, color, avail, colorPicker)
 from proto import alias, sharpen, group, find, edge, center, distance
-import numpy
+from PIL import Image
+
+print "# fast stuff"
 img = load('samples/abstract/colors.png')
 #b = take()
-print img.size
-im = numpy.asarray(img)
-print im.shape
+show(img)
 b, g, r = bgr(img)
-Blue = image(b,b,b)
-show(Blue)
-Teal = like(img)
-print bounds(b)
-print channels(b)
+img = image(b,b,b)
+test = like(img)
+bound = bounds(b)
+channel = channels(b)
 coord = (0,0,50,50)
 closer = crop(img, coord)
 bigger = scale(closer, 2.0)
 eyedrop = color(img, 0, 30)
-
-pallet = avail(Blue)
+pallet = avail(img)
 colorPicker(img,0,30)
 
-
+print "# slow stuff"
 res1 = alias(img, .3)
 res2 = sharpen(img, .3)
 blob1 = group(img)
-blob3 = find(img, mask)
+mask = Image.new("RGB", (50, 10), "white")
+blob3 = find(img,mask,(3,3))
 coords1 = edge(img)
 coords2 = center(blob1)
 dist = distance(0,3)
 
-
-print "no tests made"
+print "# yay, got to the end!"
