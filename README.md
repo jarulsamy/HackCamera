@@ -3,7 +3,9 @@ Hacking a kaicong security camera
 > Some visual hacking and creativity.
 
 ## Josh's goals
-
+* Finish developing functions for joshua.py
+* Fix camera connection issues
+* Attempt to intergrate camera with scribbler robot
 
 
 ### Utilities
