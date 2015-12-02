@@ -1,43 +1,32 @@
 # HackCamera
 Hacking a kaicong security camera
+> Some visual hacking and creativity.
 
----
-
-Getting a security camera to see like we do is
-a tough problem, but we'll definitely give it a go!
-
-### Goals?:
+## Josh's goals
 * Finish developing functions for joshua.py
 * Fix camera connection issues
 * Attempt to intergrate camera with scribbler robot
 
 
-### Steps:
-1. loading images (/ video)
-2. manipulating matricies
-3. color/mask/deltas
-4. dilation/erosion
-5. blob detection / pattern recognition
-6. (cameron should have hacked the camera by now)
+### Utilities
 
-## In depth:
-We need to get images or videos in a format
-to compare them (usually in a relationship like
-a matrix, which depends on the axis). then we can
-compare the relationships between different matrixes.
+1. I/O
+2. conversions
+3. metadata
+4. transforms
+5. colors
+6. Kaicong
+7. Myro
 
-For instance, we can focus on specific colors,
-intensities, or changes in color/intensity.
+### Prototypes
 
-Next, we can find homogeneous sections ("blobs")
-to begin looking at objects, and comparing them
-to abstracts.
+1. processing
+2. blobbing
+3. metadata
 
-Unfortunately, cameron's a bit behind on grabbing
-the camera information right now. Anyway, functions!
+## Status
 
-## Built Functions
-
-within cameron.py, I've built a few things to help
-out. In particular, you can use `from cameron import *`
-to get at all my defined code.
+* Utilities are now in the Image library.
+* .load() is limiting.
+* Current mock processes are slow.
+* Current mocks comb multiple times.
