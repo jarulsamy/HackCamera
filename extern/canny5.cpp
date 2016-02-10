@@ -1,4 +1,4 @@
-00001 /****************************************************************************/
+/****************************************************************************/
 /*                        Edge Detection Program                            */ 
 /*  A suggested user interface is as follows:                               */   
 /*  edge {-roberts,-prewitt,-sobel,-frei} [-skipNMS] [-t thresh1 thresh2] img > edgem*/

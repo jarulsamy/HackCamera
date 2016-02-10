@@ -1,13 +1,3 @@
- 2
-down vote
-favorite
-2
-	
-
-I'm new at computer vision, but i need to made a little function in C++, who will detect a white paper sheet even if is something printed on him, and the retrieve the 4 edges coordinates what is what i really need so i can use those coordinates and cut another jpg file and use the cutted image as a opengl textures. I dont know how to detect the paper. Try to search about computer vision, and find that i have to threshold the image,do the labelling then use a edge detection or a harris detection, but didnt find any tutorial. Can any one help me with this, or show me some tutorial who can help me?
-
-Just find this:
-
     int arDetectMarker( ARUint8 *dataPtr, int thresh,
                 ARMarkerInfo **marker_info, int *marker_num )
     {
@@ -123,55 +113,3 @@ for( i = 0; i < prev_num; i++ ) {
 
 return 0;
     }
-
-his this artoolkit uses to detect a marker? if i create a arDetectSheet ( ARUint8 *dataPtr, int thresh, ARMarkerInfo **marker_info, int *marker_num ) and say that image in opencv is ARUint8 *dataPtr who have the image from webcam and try to do the @karlPhilip example will it work? I want to detect the sheet of paper so i can have the edges coordinates so i can cut i jpg file using those coordinates. What i want: Detect paper Sheet and edges coordinates Upload a image without a marker and cut at same coordinate os the paper sheet And with the dusted area used as a texture And the create a polygon using the same coordinates and use the texture to hide the paper Sheet
-c++ image-processing blob
-shareedit
-	
-edited May 3 '12 at 17:30
-	
-asked Apr 28 '12 at 18:36
-Ruben Veiga
-118113
-	
-1 	 
-	
-possible duplicate of OpenCV C++/Obj-C: Detecting a sheet of paper / Square Detection – karlphillip Apr 28 '12 at 18:53
-   	 
-	
-are the edges of the paper visible? – killogre Apr 29 '12 at 4:51
-   	 
-	
-yes they are killogre – Ruben Veiga Apr 30 '12 at 9:04
-   	 
-	
-Can you post an image ? – Quentin Geissmann Apr 30 '12 at 12:43
-   	 
-	
-@QuentinGeissmann i don't have anything implement yet – Ruben Veiga May 1 '12 at 13:12
-show 2 more comments
-1 Answer
-active
-oldest
-votes
-up vote
-1
-down vote
-	
-
-Artoolkit is used for building Augmented Reality applications. It can't do what you described unless the piece of paper has something printed in it.
-
-If you are considering some other framework to do this task, I suggest you invest in OpenCV.
-shareedit
-	
-answered May 3 '12 at 17:12
-karlphillip
-58.9k22128254
-	
-   	 
-	
-umm right i now @karlphilip i doing a artoolkit program but i want to hide the paper the be more realistic – Ruben Veiga May 3 '12 at 17:33
-add a comment
-Your Answer
-
-

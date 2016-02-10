@@ -1,3 +1,4 @@
+/*
 Canny Tutorial
 Author: Noah Kuntz (2006)
 Contact: nk752@drexel.edu
@@ -28,7 +29,7 @@ Gaussian mask
 To be compiled with Microsoft Visual C++
 Note: download tripodDlg.cpp rather than cutting and pasting from below.
 
-
+*/
 void CTripodDlg::doMyImageProcessing(LPBITMAPINFOHEADER lpThisBitmapInfoHeader)
 {
 	// doMyImageProcessing:  This is where you'd write your own image processing code
@@ -97,6 +98,7 @@ void CTripodDlg::doMyImageProcessing(LPBITMAPINFOHEADER lpThisBitmapInfoHeader)
 		}
 	}
 
+/*
 Step 2: Find edge gradient strength and direction
 The next step is to use Sobel masks to find the edge gradient strength and direction for each pixel. First the Sobel masks are applied to the 3x3 pixel neighborhood of the current pixel, in both the x and y directions. Then the sum of each mask value times the corresponding pixel is computed as the Gx and Gy values, respectively. The square root of Gx squared plus Gy squared equals the edge strength. The inverse tangent of Gx / Gy yields the edge direction. The edge direction is then approximated to one of four possible values that make up the possible directions an edge could be in an image made up of a square pixel grid. This edge direction is then stored in the array edgeDir[row][col] and the gradient strength is stored in the array gradient[row][col].
 
@@ -112,6 +114,7 @@ Note: download tripodDlg.cpp rather than cutting and pasting from below.
 
 	*NOTE*  These two lines must be added to the file tripodDlg.h, the rest continues 
  	in tripodDlg.cpp's "doMyImageProcessing" function 
+*/
 		int edgeDir[240][320];			// Stores the edge direction of each pixel
 		float gradient[240][320];		// Stores the gradient strength of each pixel
 
@@ -153,12 +156,13 @@ Note: download tripodDlg.cpp rather than cutting and pasting from below.
 		}
 	}
 
+/*
 Step 3: Trace along the edges
 The next step is to actually trace along the edges based on the previously calculated gradient strengths and edge directions. Each pixel is cycled through using two nested for loops. If the current pixel has a gradient strength greater than the defined upperThreshold, then a switch is executed. The switch is determined by the edge direction of the current pixel. It stores the row and column of the next possible pixel in that direction and then tests the edge direction and gradient strength of that pixel. If it has the same edge direction and a gradient strength greater than the lowerThreshold, that pixel is set to white and the next pixel along that edge is tested. In this manner any significantly sharp edge is detected and set to white while all other pixels are set to black.
 
 To be compiled with Microsoft Visual C++
 Note: download tripodDlg.cpp rather than cutting and pasting from below.
-
+*/
 
 	/* Trace along all the edges in the image */
 	for (row = 1; row < H - 1; row++) {
@@ -268,12 +272,13 @@ void CTripodDlg::findEdge(int rowShift, int colShift, int row, int col, int dir,
 		}
 	}
 
+/*
 Step 4: Suppress non-maximum edges
 The last step is to find weak edges that are parallel to strong edges and eliminate them. This is accomplished by examining the pixels perpendicular to a particular edge pixel, and eliminating the non-maximum edges. The code used is very similar to the edge tracing code.
 
 To be compiled with Microsoft Visual C++
 Note: download tripodDlg.cpp rather than cutting and pasting from below.
-
+*/
 
 	/* Non-maximum Suppression */
 	for (row = 1; row < H - 1; row++) {
@@ -427,9 +432,7 @@ void CTripodDlg::suppressNonMax(int rowShift, int colShift, int row, int col, in
 	}
 }
 
-
+/*
 Final Words
 This tutorial's objective was to show how simple edge detection can be implemented in TRIPOD. Using this as a basis many other operations could be performed on the image. Separate objects can be located, counted, and processed to determine their shape.
-
-Click here to email me.
-Click here to return to my Tutorials page. 
+*/
