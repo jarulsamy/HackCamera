@@ -1,0 +1,7 @@
+Take C++ examples and turn into python ones
+build an example to track an object
+
+Robotic vision with libopencv-dev / visual C++
+#https://sourceforge.net/projects/opencvlibrary/
+
+
